@@ -1,4 +1,4 @@
-﻿# ðŸ¦ BankCompliance AI (`bank-compliance-ai-app`)
+﻿BankCompliance AI (`bank-compliance-ai-app`)
 
 An Enterprise Cloud-Native Banking Regulatory & Compliance Copilot built on **Azure Kubernetes Service (AKS)** and **Azure OpenAI**, powered by **LiteLLM Gateway**, **Qdrant Vector DB**, and **Azure AI Content Safety**.
 
@@ -21,7 +21,7 @@ c:\Users\RichT\OneDrive\Documents\Repos\
 
 ---
 
-## ðŸš€ Quick Start (Local Development)
+### Quick Start (Local Development)
 
 ### 1. Backend (FastAPI)
 ```bash
