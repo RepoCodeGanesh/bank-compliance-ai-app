@@ -1,7 +1,7 @@
-from pydantic_settings import BaseSettings, SettingsConfigDict
+﻿from pydantic_settings import BaseSettings, SettingsConfigDict
 
 class Settings(BaseSettings):
-    """Application settings — pydantic-settings reads env vars automatically.
+    """Application settings â€” pydantic-settings reads env vars automatically.
     Do NOT use os.getenv() inside this class; set field defaults instead.
     Values are injected at runtime via the k8s ConfigMap (bankc-backend-config).
     """
@@ -27,10 +27,11 @@ class Settings(BaseSettings):
     # Azure AI Content Safety (populated from Terraform output via k8s ConfigMap)
     CONTENT_SAFETY_ENDPOINT: str = ""
 
-    # CORS — comma-separated allowed origins (injected by k8s ConfigMap)
-    ALLOWED_ORIGINS: str = "https://bank.mytaxbot.site"
+    # CORS â€” comma-separated allowed origins (injected by k8s ConfigMap)
+    ALLOWED_ORIGINS: str = "https://happy-coast-00666250f.7.azurestaticapps.net,https://bank.mytaxbot.site,http://localhost:3000"
 
     # Azure Monitor OpenTelemetry (injected by k8s ConfigMap)
     APPLICATIONINSIGHTS_CONNECTION_STRING: str = ""
 
 settings = Settings()
+

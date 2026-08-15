@@ -4,22 +4,17 @@ metadata:
   name: bankc-backend-config
   namespace: bank-compliance
 data:
-  # Populate CONTENT_SAFETY_ENDPOINT from Terraform output:
-  # terraform -chdir=workloads/bank-compliance-ai-aks output content_safety_endpoint
   CONTENT_SAFETY_ENDPOINT: "https://cs-ht-bankc-p-sea-01.cognitiveservices.azure.com/"
 
-  # Internal cluster DNS — these do not need to change
+  # Internal cluster DNS
   LITELLM_URL: "http://litellm:4000/v1"
   OPENAI_MODEL: "gpt-5.4-nano"
   QDRANT_HOST: "qdrant"
   QDRANT_PORT: "6333"
   QDRANT_COLLECTION: "rbi_master_directions"
 
-  # CORS: comma-separated. Add localhost:3000 for local dev if needed.
-  ALLOWED_ORIGINS: "https://bank.mytaxbot.site"
+  # CORS: includes both default Azure SWA domain, optional custom domain, and local dev
+  ALLOWED_ORIGINS: "https://happy-coast-00666250f.7.azurestaticapps.net,https://bank.mytaxbot.site,http://localhost:3000"
 
-  # Set to your Application Insights connection string from the shared Log Analytics workspace
   APPLICATIONINSIGHTS_CONNECTION_STRING: ""
-
   ENVIRONMENT: "production"
-
