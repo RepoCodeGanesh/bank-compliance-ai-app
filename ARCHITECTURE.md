@@ -8,9 +8,9 @@
                 â”‚
                 â–¼ (AKS Ingress: 10.42.1.0/24)
   [ FastAPI Backend Pod ]
-    â”œâ”€â”€â–º [ PII Redactor ] â”€â”€â–º Auto-masks PAN / Aadhaar / Account #s
-    â”œâ”€â”€â–º [ Content Safety F0 ] â”€â”€â–º Prompt Injection & Jailbreak Shield
-    â””â”€â”€â–º [ Qdrant Vector DB (4GB CSI Disk) ] â”€â”€â–º Retrieves RBI Master Direction Clauses
+    â”œâ”€â”€ [ PII Redactor ] â”€â”€â–º Auto-masks PAN / Aadhaar / Account #s
+    â”œâ”€â”€ [ Content Safety F0 ] â”€â”€â–º Prompt Injection & Jailbreak Shield
+    â””â”€â”€ [ Qdrant Vector DB (4GB CSI Disk) ] â”€â”€â–º Retrieves RBI Master Direction Clauses
                 â”‚
                 â–¼
   [ LiteLLM Proxy Gateway Pod ]

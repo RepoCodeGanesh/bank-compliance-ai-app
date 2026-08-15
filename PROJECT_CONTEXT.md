@@ -4,9 +4,20 @@ This document defines the runtime environment, endpoint connections, and operati
 
 ---
 
+## ðŸ—‚ï¸ Local Workspace Layout
+
+```
+c:\Users\RichT\OneDrive\Documents\Repos\
+â”œâ”€â”€ terraform-azure-iac/       # Infrastructure repository (Landing Zone, AKS IaC)
+â””â”€â”€ bank-compliance-ai-app/    # Application repository (FastAPI, React, Helm, KEDA)
+```
+
+---
+
 ## ðŸŒ Connected Cloud Infrastructure
 
-* **Infrastructure Repository:** [`terraform-azure-iac`](https://github.com/RepoCodeGanesh/terraform-azure-iac) $\rightarrow$ [`workloads/bank-compliance-ai-aks`](https://github.com/RepoCodeGanesh/terraform-azure-iac/tree/main/workloads/bank-compliance-ai-aks)
+* **Infrastructure Repository:** [`terraform-azure-iac`](https://github.com/RepoCodeGanesh/terraform-azure-iac) âž” [`workloads/bank-compliance-ai-aks`](https://github.com/RepoCodeGanesh/terraform-azure-iac/tree/main/workloads/bank-compliance-ai-aks)
+* **Application Repository:** [`bank-compliance-ai-app`](https://github.com/RepoCodeGanesh/bank-compliance-ai-app)
 * **Domain Name:** `https://bank.mytaxbot.site`
 * **Static Web App:** `stapp-ht-bankc-p-cin-01`
 * **Kubernetes Cluster:** `aks-ht-bankc-p-cin-01` (Resource Group: `rg-ht-bankc-p-cin-01` in Central India)
@@ -17,7 +28,7 @@ This document defines the runtime environment, endpoint connections, and operati
 
 ---
 
-## ðŸ”’ Security & FinOps Standards
+## ðŸ›¡ï¸ Security & FinOps Standards
 
 1. **Near-Zero Idle Cost:** Automated `az aks stop` / `az aks start` governance keeps idle compute cost at **$0.00** (~â‚¹25/day active).
 2. **Qdrant Storage:** 4GB Azure Managed Disk (`storageClassName: managed-csi`, `E1` tier = ~$0.15/month).

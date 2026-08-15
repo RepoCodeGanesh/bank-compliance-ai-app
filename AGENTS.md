@@ -1,11 +1,21 @@
 ﻿# Repository Configuration & AI Agent Context
 
-## 🎯 Repository Purpose & Intent
-This repository houses the **BankCompliance AI (`bank-compliance-ai-app`)** application codebase — an Enterprise Cloud-Native Banking Regulatory & Compliance Copilot built on **Azure Kubernetes Service (AKS)** and **Azure OpenAI**.
+## ðŸŽ¯ Repository Purpose & Intent
+This repository houses the **BankCompliance AI (`bank-compliance-ai-app`)** application codebase - an Enterprise Cloud-Native Banking Regulatory & Compliance Copilot built on **Azure Kubernetes Service (AKS)** and **Azure OpenAI**.
 
 ---
 
-## 🔗 Infrastructure Connection & Multi-Repo Mapping
+## ðŸ—‚ï¸ Sibling Workspace Path Mapping
+
+```
+c:\Users\RichT\OneDrive\Documents\Repos\
+â”œâ”€â”€ terraform-azure-iac/       # Infrastructure repository (Landing Zone, AKS IaC)
+â””â”€â”€ bank-compliance-ai-app/    # Application repository (FastAPI, React, Helm, KEDA)
+```
+
+---
+
+## ðŸ”‘ Infrastructure Connection & Multi-Repo Mapping
 
 This application connects directly to the infrastructure provisioned by **`terraform-azure-iac`** (`workloads/bank-compliance-ai-aks`):
 
@@ -21,7 +31,7 @@ This application connects directly to the infrastructure provisioned by **`terra
 
 ---
 
-## 🏛️ Architecture & Component Responsibilities
+## âš™ï¸ Architecture & Component Responsibilities
 
 1. **Frontend (`frontend/`)**: Modern React Web SPA deployed on Azure Static Web Apps bound to **`https://bank.mytaxbot.site`**.
 2. **Backend API (`backend/`)**: Python FastAPI backend with PII auto-masking (PAN/Aadhaar) and hierarchical RBI Master Direction clause citations.
