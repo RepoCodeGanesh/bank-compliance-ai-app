@@ -1,4 +1,4 @@
-﻿from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 from typing import List, Optional
 import httpx
@@ -71,9 +71,17 @@ async def query_compliance(request: QueryRequest):
             resp.raise_for_status()
             ai_data = resp.json()
             answer = ai_data["choices"][0]["message"]["content"]
-    except Exception as e:
-        # Fallback response if LiteLLM is not running locally
-        answer = f"Based on retrieved RBI Master Directions:\n\n{context_text}\n\n*(Note: Gateway returned: {str(e)})*"
+    except httpx.HTTPStatusError as e:
+        # Propagate gateway errors (401 auth, 429 rate-limit, 5xx) to client
+        raise HTTPException(
+            status_code=502,
+            detail=f"AI gateway returned {e.response.status_code}: check LiteLLM/Azure OpenAI config"
+        )
+    except httpx.TimeoutException:
+        raise HTTPException(status_code=504, detail="AI gateway timed out after 30s")
+    except Exception:
+        # Graceful fallback only for genuine network-down / local-dev scenarios
+        answer = f"Based on retrieved RBI Master Directions:\n\n{context_text}\n\n*(Note: AI gateway is unreachable — showing retrieved context only)*"
 
     citations = [
         Citation(

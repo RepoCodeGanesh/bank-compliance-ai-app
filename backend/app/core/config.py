@@ -1,23 +1,36 @@
-﻿import os
-from pydantic_settings import BaseSettings
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
 class Settings(BaseSettings):
+    """Application settings — pydantic-settings reads env vars automatically.
+    Do NOT use os.getenv() inside this class; set field defaults instead.
+    Values are injected at runtime via the k8s ConfigMap (bankc-backend-config).
+    """
+    model_config = SettingsConfigDict(
+        case_sensitive=True,
+        env_file=".env",
+        env_file_encoding="utf-8",
+        extra="ignore"
+    )
+
     APP_NAME: str = "BankCompliance AI"
-    ENVIRONMENT: str = os.getenv("ENVIRONMENT", "production")
-    
+    ENVIRONMENT: str = "production"
+
     # AI Gateway / LiteLLM Proxy
-    LITELLM_URL: str = os.getenv("LITELLM_URL", "http://litellm:4000/v1")
-    OPENAI_MODEL: str = os.getenv("OPENAI_MODEL", "gpt-5.4-nano")
-    
+    LITELLM_URL: str = "http://litellm:4000/v1"
+    OPENAI_MODEL: str = "gpt-5.4-nano"
+
     # Qdrant Vector DB
-    QDRANT_HOST: str = os.getenv("QDRANT_HOST", "qdrant")
-    QDRANT_PORT: int = int(os.getenv("QDRANT_PORT", "6333"))
-    QDRANT_COLLECTION: str = os.getenv("QDRANT_COLLECTION", "rbi_master_directions")
-    
-    # Azure Content Safety
-    CONTENT_SAFETY_ENDPOINT: str = os.getenv("CONTENT_SAFETY_ENDPOINT", "")
-    
-    class Config:
-        case_sensitive = True
+    QDRANT_HOST: str = "qdrant"
+    QDRANT_PORT: int = 6333
+    QDRANT_COLLECTION: str = "rbi_master_directions"
+
+    # Azure AI Content Safety (populated from Terraform output via k8s ConfigMap)
+    CONTENT_SAFETY_ENDPOINT: str = ""
+
+    # CORS — comma-separated allowed origins (injected by k8s ConfigMap)
+    ALLOWED_ORIGINS: str = "https://bank.mytaxbot.site"
+
+    # Azure Monitor OpenTelemetry (injected by k8s ConfigMap)
+    APPLICATIONINSIGHTS_CONNECTION_STRING: str = ""
 
 settings = Settings()
