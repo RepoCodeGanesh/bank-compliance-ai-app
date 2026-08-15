@@ -1,4 +1,4 @@
-﻿import React, { useState } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import { Send, Bot, User, Shield, Sparkles } from 'lucide-react'
 import PIIBanner from './PIIBanner'
 import CitationCard from './CitationCard'
@@ -14,6 +14,12 @@ export default function ChatWindow({ selectedCircular }) {
   ])
   const [input, setInput] = useState('')
   const [loading, setLoading] = useState(false)
+  const bottomRef = useRef(null)
+
+  // Auto-scroll to newest message whenever messages or loading state changes
+  useEffect(() => {
+    bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
+  }, [messages, loading])
 
   const handleSend = async (e) => {
     e.preventDefault()
@@ -98,6 +104,8 @@ export default function ChatWindow({ selectedCircular }) {
             <span>Consulting Qdrant Vector DB & RBI Master Directions...</span>
           </div>
         )}
+        {/* Scroll anchor — always kept at the bottom of the message list */}
+        <div ref={bottomRef} />
       </div>
 
       {/* Input */}

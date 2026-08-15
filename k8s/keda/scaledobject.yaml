@@ -1,4 +1,4 @@
-﻿apiVersion: keda.sh/v1alpha1
+apiVersion: keda.sh/v1alpha1
 kind: ScaledObject
 metadata:
   name: bankc-backend-scaler
@@ -8,9 +8,20 @@ spec:
     name: bankc-backend
   minReplicaCount: 0
   maxReplicaCount: 5
+  # Wait 5 minutes of zero traffic before scaling back down
   cooldownPeriod: 300
   triggers:
+    # Scale up based on CPU utilisation once pods are running
     - type: cpu
       metadata:
         type: Utilization
         value: "70"
+    # HTTP trigger is required for scale-FROM-zero.
+    # CPU cannot fire when minReplicaCount=0 (no pods = no metrics).
+    # Requires the KEDA HTTP Add-on: https://github.com/kedacore/http-add-on
+    - type: http
+      metadata:
+        url: "http://bankc-backend.bank-compliance.svc.cluster.local:8000/healthz"
+        # Scale up when more than 5 pending requests are queued
+        targetPendingRequests: "5"
+

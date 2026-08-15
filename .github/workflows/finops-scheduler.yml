@@ -1,8 +1,9 @@
-﻿name: FinOps Cluster Lifecycle Scheduler
+name: FinOps Cluster Lifecycle Scheduler
 
 on:
   schedule:
-    - cron: '0 14 * * 1-5' # Auto-stop cluster at 7:30 PM IST on weekdays
+    - cron: '30 2 * * 1-5'  # Auto-START at 8:00 AM IST (Mon-Fri)
+    - cron: '0 14 * * 1-5'  # Auto-STOP  at 7:30 PM IST (Mon-Fri)
   workflow_dispatch:
     inputs:
       action:
@@ -27,11 +28,32 @@ jobs:
         with:
           client-id: ${{ secrets.APP_CLIENT_ID }}
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
-          subscription-id: "f4ffefe1-d689-4059-969c-ccc73e2a11d4"
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Resolve Action from Schedule or Input
+        id: resolve
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "action=${{ inputs.action }}" >> $GITHUB_OUTPUT
+          elif [ "${{ github.event.schedule }}" = "30 2 * * 1-5" ]; then
+            echo "action=start" >> $GITHUB_OUTPUT
+          else
+            echo "action=stop" >> $GITHUB_OUTPUT
+          fi
 
       - name: Execute Cluster Lifecycle
         run: |
-          ACTION="${{ inputs.action || 'stop' }}"
+          ACTION="${{ steps.resolve.outputs.action }}"
           echo "Executing AKS $ACTION on cluster aks-ht-bankc-p-cin-01..."
           az aks $ACTION --resource-group rg-ht-bankc-p-cin-01 --name aks-ht-bankc-p-cin-01 --no-wait
-          echo "Cluster $ACTION command dispatched successfully!"
+          echo "Cluster $ACTION command dispatched."
+
+      - name: Verify Cluster Power State
+        run: |
+          sleep 10
+          STATE=$(az aks show \
+            --resource-group rg-ht-bankc-p-cin-01 \
+            --name aks-ht-bankc-p-cin-01 \
+            --query "powerState.code" -o tsv)
+          echo "Current cluster power state: $STATE"
+
