@@ -17,18 +17,13 @@ def redact_pii(text: str) -> Tuple[str, List[str]]:
     if PAN_REGEX.search(text):
         detected_pii.append("PAN Card")
         text = PAN_REGEX.sub("[PAN-REDACTED]", text)
-
+        
     if AADHAAR_REGEX.search(text):
         detected_pii.append("Aadhaar Number")
         text = AADHAAR_REGEX.sub("[AADHAAR-REDACTED]", text)
-
-    # Must run before PHONE_REGEX to avoid partial matches on long digit strings
-    if BANK_ACC_REGEX.search(text):
-        detected_pii.append("Bank Account Number")
-        text = BANK_ACC_REGEX.sub("[ACCT-REDACTED]", text)
-
+        
     if PHONE_REGEX.search(text):
         detected_pii.append("Mobile Number")
         text = PHONE_REGEX.sub("[PHONE-REDACTED]", text)
-
+        
     return text, detected_pii

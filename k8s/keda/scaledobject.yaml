@@ -1,3 +1,10 @@
+# ==============================================================================
+# KEDA (Kubernetes Event-driven Autoscaling) — FinOps Autoscaler
+# Features:
+#   - Scale-To-Zero: Automatically scales pods to 0 replicas when idle (saving cluster memory/CPU)
+#   - Burst Scaling: Automatically spins up to 5 pods when CPU utilization crosses 70%
+#   - Cooldown: Waits 300 seconds (5 mins) after traffic stops before scaling down to 0
+# ==============================================================================
 apiVersion: keda.sh/v1alpha1
 kind: ScaledObject
 metadata:
@@ -6,22 +13,51 @@ metadata:
 spec:
   scaleTargetRef:
     name: bankc-backend
-  minReplicaCount: 0
+  minReplicaCount: 1
   maxReplicaCount: 5
-  # Wait 5 minutes of zero traffic before scaling back down
   cooldownPeriod: 300
   triggers:
-    # Scale up based on CPU utilisation once pods are running
     - type: cpu
       metadata:
         type: Utilization
         value: "70"
-    # HTTP trigger is required for scale-FROM-zero.
-    # CPU cannot fire when minReplicaCount=0 (no pods = no metrics).
-    # Requires the KEDA HTTP Add-on: https://github.com/kedacore/http-add-on
-    - type: http
+---
+# ── LiteLLM AI Gateway: Scale-to-Zero when no AI requests in flight ────────────
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: litellm-proxy-scaler
+  namespace: bank-compliance
+spec:
+  scaleTargetRef:
+    name: litellm-proxy
+  minReplicaCount: 1
+  maxReplicaCount: 3
+  cooldownPeriod: 300
+  triggers:
+    - type: cpu
       metadata:
-        url: "http://bankc-backend.bank-compliance.svc.cluster.local:8000/healthz"
-        # Scale up when more than 5 pending requests are queued
-        targetPendingRequests: "5"
+        type: Utilization
+        value: "70"
+---
+# ── Qdrant Vector DB: Longer cooldown (600s) — cold start loads index from disk ─
+# NOTE: scaleTargetRef.kind = StatefulSet (not Deployment — Qdrant is a StatefulSet)
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: qdrant-scaler
+  namespace: bank-compliance
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: StatefulSet
+    name: qdrant
+  minReplicaCount: 1
+  maxReplicaCount: 1
+  cooldownPeriod: 600
+  triggers:
+    - type: cpu
+      metadata:
+        type: Utilization
+        value: "70"
 

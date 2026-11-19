@@ -1,7 +1,12 @@
-﻿apiVersion: v1
+# ==============================================================================
+# BankCompliance AI — Dedicated Kubernetes Namespace
+# Isolates BankCompliance AI compute workloads, RBAC policies, network policies,
+# and secret stores from other applications hosted on the shared AKS cluster.
+# ==============================================================================
+apiVersion: v1
 kind: Namespace
 metadata:
   name: bank-compliance
   labels:
-    # Required for Azure Workload Identity webhook to inject OIDC tokens into pods
-    azure.workload.identity/use: "true"
+    name: bank-compliance
+    app.kubernetes.io/part-of: bank-compliance-ai
