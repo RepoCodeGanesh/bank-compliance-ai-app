@@ -53,4 +53,7 @@ jobs:
       live_url: 'https://bank.mytaxbot.site'
       apim_gateway_url: 'https://apim-ht-ss-p-cin-01.azure-api.net/bankc/healthz'
       target: ${{ inputs.target || 'all' }}
-    secrets: inherit
+    secrets:
+      SHARED_CLIENT_ID: ${{ secrets.SHARED_CLIENT_ID || secrets.APP_CLIENT_ID }}
+      APP_CLIENT_ID: ${{ secrets.APP_CLIENT_ID }}
+      AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
